@@ -83,42 +83,30 @@ const Index = () => {
   if (loading) return <div className="p-8">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <Sidebar />
-      
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <Header title="Dashboard" />
-        
-        {/* Dashboard Content */}
-        <main className="flex-1 p-8 overflow-y-auto">
+      <div className="fixed inset-y-0 left-0 w-64 z-30">
+        <Sidebar />
+      </div>
+      {/* Main Content with fixed header */}
+      <div className="ml-64 flex flex-col h-screen">
+        <div className="sticky top-0 z-20 bg-gray-50">
+          <Header title="Dashboard" />
+        </div>
+        <main className="flex-1 overflow-y-auto p-8">
           <div className="max-w-7xl mx-auto">
             {/* Top Row */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <ProjectStatusCard
-                plan={plan}
-                progress={progress}
-              />
-              <GanttChart
-                plan={plan}
-                progress={progress}
-              />
+              <ProjectStatusCard plan={plan} progress={progress} />
+              <GanttChart plan={plan} progress={progress} />
             </div>
             {/* Bottom Row */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2">
-                <BudgetChart
-                  plan={plan}
-                  progress={progress}
-                />
+                <BudgetChart plan={plan} progress={progress} />
               </div>
               <div>
-                <RiskChart
-                  plan={plan}
-                  progress={progress}
-                />
+                <RiskChart plan={plan} progress={progress} />
               </div>
             </div>
           </div>
