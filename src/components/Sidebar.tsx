@@ -34,9 +34,7 @@ const Sidebar = () => {
       {/* Logo Section */}
       <div className="p-6 border-b">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-            <div className="w-6 h-6 bg-orange-400 rounded"></div>
-          </div>
+          <img src="/favicon.png" alt="Logo" className="w-10 h-10 rounded-lg object-cover" />
           <div>
             <h2 className="font-bold text-gray-800">MANAGEMENT</h2>
             <h2 className="font-bold text-gray-800">PORTAL</h2>
