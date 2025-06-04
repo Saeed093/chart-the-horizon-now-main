@@ -38,7 +38,7 @@ const BudgetChart = ({
           <p className="font-medium">{label}</p>
           <p className="text-blue-600">Planned: ${estimated.toLocaleString()}</p>
           <p className="text-purple-600">Actual: ${consumed.toLocaleString()}</p>
-          <p className={`${variance > 0 ? 'text-red-600' : 'text-green-600'}`}>
+          <p className={`${Number(variance) > 0 ? 'text-red-600' : 'text-green-600'}`}>
             Variance: {variance}%
           </p>
         </div>
@@ -49,7 +49,7 @@ const BudgetChart = ({
 
   return (
     <div className="bg-white rounded-lg shadow-sm border p-6">
-      <h3 className="text-xl font-bold text-gray-800 mb-6">Budget</h3>
+      <h3 className="text-xl font-bold text-gray-800 mb-6">Budget Breakdown</h3>
       
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
@@ -68,7 +68,7 @@ const BudgetChart = ({
               domain={[0, 'auto']}
               tickFormatter={(value) => `$${value.toLocaleString()}`}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip active={undefined} payload={undefined} label={undefined} />} />
             <Legend />
             <Bar dataKey="Estimated" fill="#3b82f6" radius={[2, 2, 0, 0]} name="Planned Budget" />
             <Bar dataKey="Consumed" fill="#a855f7" radius={[2, 2, 0, 0]} name="Actual Spent" />
