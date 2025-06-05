@@ -26,215 +26,50 @@ const initialRisks = [
 ];
 
 const Progress = () => {
-  const [executiveSummary, setExecutiveSummary] = useState(
-    'The CLH project is progressing on schedule and within budget. All 10 Community Learning Hubs have been successfully deployed, and usage is steadily increasing. Early indicators suggest strong interest among seniors and low-income jobseekers. User feedback is positive, especially for the multilingual AI tutor and scam prevention modules.\nWe are currently in the evaluation and optimisation phase. Engagement activities and content refinement are ongoing. A final impact report is expected in December 2025.'
-  );
-  const [milestones, setMilestones] = useState(initialMilestones);
-  const [achievements, setAchievements] = useState([
-    '4,130 unique users across 10 hubs (exceeded target of 1,500 for this stage)',
-    '72% of users are above age 50',
-    '550 learners completed at least one structured learning path',
-    'High engagement in scam prevention and PayNow tutorials',
-    'Partnered with SkillsFuture to trial 2 micro-certifications',
-    'AI interface upgraded with Mandarin, Malay, Tamil voice support',
-  ]);
-  const [budget, setBudget] = useState(initialBudget);
-  const [risks, setRisks] = useState(initialRisks);
-  const [nextSteps, setNextSteps] = useState([
-    'Run final public engagement campaign (e.g. "Digital Ready Week")',
-    'Complete final data collection and impact evaluation',
-    'Prepare and present Phase 2 proposal for wider rollout in Q1 2026',
-    'Explore corporate and NGO partnerships for sustainability',
-  ]);
-  const [recommendations, setRecommendations] = useState([
-    'Early results support scaling to 30–50 hubs in 2026',
-    'Focus future content development on:',
-    'Digital job-readiness (e.g. e-commerce fulfilment, remote freelancing)',
-    'Financial safety and scam resilience',
-    'Potential to deploy AI tutors in heartland polyclinics and HDB void decks via mobile kiosks',
-  ]);
+  const [file, setFile] = useState<File | null>(null);
 
-  // Editable handlers for tables and lists
-  const handleMilestoneChange = (idx, field, value) => {
-    setMilestones(milestones.map((m, i) => i === idx ? { ...m, [field]: value } : m));
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
   };
-  const handleBudgetChange = (idx, field, value) => {
-    setBudget(budget.map((b, i) => i === idx ? { ...b, [field]: value } : b));
-  };
-  const handleRiskChange = (idx, field, value) => {
-    setRisks(risks.map((r, i) => i === idx ? { ...r, [field]: value } : r));
-  };
-  const handleAchievementChange = (idx, value) => {
-    setAchievements(achievements.map((a, i) => i === idx ? value : a));
-  };
-  const handleNextStepChange = (idx, value) => {
-    setNextSteps(nextSteps.map((n, i) => i === idx ? value : n));
-  };
-  const handleRecommendationChange = (idx, value) => {
-    setRecommendations(recommendations.map((r, i) => i === idx ? value : r));
+
+  const handleSave = () => {
+    if (file) {
+      // TODO: Implement save logic here
+      console.log('Saving file:', file.name);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
       <div className="fixed inset-y-0 left-0 w-64 z-30">
         <Sidebar />
       </div>
-      {/* Main Content with fixed header */}
       <div className="ml-64 flex flex-col h-screen">
         <div className="sticky top-0 z-20 bg-gray-50">
-          <Header title="Current Progress" />
+          <Header title="Update Progress" />
         </div>
         <main className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-5xl mx-auto space-y-10">
-            {/* Progress at the top */}
-            <section>
-              <h1 className="text-3xl font-bold text-gray-800 mb-4">Progress</h1>
-            </section>
-            {/* a) Executive Summary */}
-            <section>
-              <h2 className="text-xl font-semibold mb-2">1. Executive Summary</h2>
-              <textarea
-                className="w-full min-h-[100px] p-3 border rounded bg-white text-gray-800"
-                value={executiveSummary}
-                onChange={e => setExecutiveSummary(e.target.value)}
+          <div className="max-w-7xl mx-auto">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-bold mb-4">Upload Progress Update</h2>
+              <p className="text-gray-600 mb-4">Please upload a PDF or Word document to update the progress.</p>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={handleFileChange}
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
               />
-            </section>
-            {/* b) Progress Against Key Milestones */}
-            <section>
-              <h2 className="text-xl font-semibold mb-2">2. Progress Against Key Milestones</h2>
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border rounded">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="p-2 border">Milestone</th>
-                      <th className="p-2 border">Target Date</th>
-                      <th className="p-2 border">Status</th>
-                      <th className="p-2 border">Notes</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {milestones.map((m, idx) => (
-                      <tr key={idx}>
-                        <td className="border p-2">
-                          <input className="w-full" value={m.milestone} onChange={e => handleMilestoneChange(idx, 'milestone', e.target.value)} />
-                        </td>
-                        <td className="border p-2">
-                          <input className="w-full" value={m.target} onChange={e => handleMilestoneChange(idx, 'target', e.target.value)} />
-                        </td>
-                        <td className="border p-2">
-                          <input className="w-full" value={m.status} onChange={e => handleMilestoneChange(idx, 'status', e.target.value)} />
-                        </td>
-                        <td className="border p-2">
-                          <input className="w-full" value={m.notes} onChange={e => handleMilestoneChange(idx, 'notes', e.target.value)} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-            {/* c) Key Achievements */}
-            <section>
-              <h2 className="text-xl font-semibold mb-2">3. Key Achievements</h2>
-              <ul className="space-y-2">
-                {achievements.map((a, idx) => (
-                  <li key={idx}>
-                    <input className="w-full" value={a} onChange={e => handleAchievementChange(idx, e.target.value)} />
-                  </li>
-                ))}
-              </ul>
-            </section>
-            {/* d) Budget Status */}
-            <section>
-              <h2 className="text-xl font-semibold mb-2">4. Budget Status</h2>
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border rounded">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="p-2 border">Category</th>
-                      <th className="p-2 border">Budgeted</th>
-                      <th className="p-2 border">Actual (to date)</th>
-                      <th className="p-2 border">Variance</th>
-                      <th className="p-2 border">Notes</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {budget.map((b, idx) => (
-                      <tr key={idx}>
-                        <td className="border p-2">
-                          <input className="w-full" value={b.category} onChange={e => handleBudgetChange(idx, 'category', e.target.value)} />
-                        </td>
-                        <td className="border p-2">
-                          <input className="w-full" type="number" value={b.budgeted} onChange={e => handleBudgetChange(idx, 'budgeted', e.target.value)} />
-                        </td>
-                        <td className="border p-2">
-                          <input className="w-full" type="number" value={b.actual} onChange={e => handleBudgetChange(idx, 'actual', e.target.value)} />
-                        </td>
-                        <td className="border p-2">
-                          <input className="w-full" type="number" value={b.variance} onChange={e => handleBudgetChange(idx, 'variance', e.target.value)} />
-                        </td>
-                        <td className="border p-2">
-                          <input className="w-full" value={b.notes} onChange={e => handleBudgetChange(idx, 'notes', e.target.value)} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-            {/* e) Risks & Mitigations */}
-            <section>
-              <h2 className="text-xl font-semibold mb-2">5. Risks & Mitigations</h2>
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border rounded">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="p-2 border">Risk</th>
-                      <th className="p-2 border">Status</th>
-                      <th className="p-2 border">Mitigation</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {risks.map((r, idx) => (
-                      <tr key={idx}>
-                        <td className="border p-2">
-                          <input className="w-full" value={r.risk} onChange={e => handleRiskChange(idx, 'risk', e.target.value)} />
-                        </td>
-                        <td className="border p-2">
-                          <input className="w-full" value={r.status} onChange={e => handleRiskChange(idx, 'status', e.target.value)} />
-                        </td>
-                        <td className="border p-2">
-                          <input className="w-full" value={r.mitigation} onChange={e => handleRiskChange(idx, 'mitigation', e.target.value)} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-            {/* f) Next Steps */}
-            <section>
-              <h2 className="text-xl font-semibold mb-2">6. Next Steps (Nov–Dec 2025)</h2>
-              <ul className="space-y-2">
-                {nextSteps.map((n, idx) => (
-                  <li key={idx}>
-                    <input className="w-full" value={n} onChange={e => handleNextStepChange(idx, e.target.value)} />
-                  </li>
-                ))}
-              </ul>
-            </section>
-            {/* g) Preliminary Recommendations */}
-            <section>
-              <h2 className="text-xl font-semibold mb-2">7. Preliminary Recommendations</h2>
-              <ul className="space-y-2">
-                {recommendations.map((r, idx) => (
-                  <li key={idx}>
-                    <input className="w-full" value={r} onChange={e => handleRecommendationChange(idx, e.target.value)} />
-                  </li>
-                ))}
-              </ul>
-            </section>
+              {file && <p className="mt-2 text-sm text-gray-600">Selected file: {file.name}</p>}
+              <button
+                onClick={handleSave}
+                disabled={!file}
+                className={`mt-4 px-4 py-2 rounded bg-blue-600 text-white font-semibold ${!file ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
+              >
+                Save
+              </button>
+            </div>
           </div>
         </main>
       </div>

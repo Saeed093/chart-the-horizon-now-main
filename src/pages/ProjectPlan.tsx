@@ -3,118 +3,75 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import { db } from '../lib/db';
 
-const initialForm = {
-  title: 'Digital Inclusion through AI-Powered Community Learning Hubs',
-  duration: 'May 2025 – December 2025',
-  owner: 'Governance Policy & Planning Division, IMDA',
-  manager: 'Gerald Tan',
-  summary: `The AI-Powered Community Learning Hubs (CLH) project aims to pilot AI-enabled digital learning stations at selected public libraries and community centres in underserved neighbourhoods. The hubs will provide on-demand, multilingual training in basic digital literacy, cybersecurity awareness, and emerging job skills such as e-commerce, content creation, and remote freelancing. The project will leverage IMDA's existing infrastructure and partnerships and will explore the integration of AI tutors and adaptive learning systems.`,
-  objectives: [
-    'Enhance digital inclusion by targeting low-income, elderly, and non-English speaking residents.',
-    'Deploy AI tutors capable of personalised learning journeys and multilingual support.',
-    'Pilot skill-based microlearning with certification paths aligned to SkillsFuture.',
-    'Generate insights for nationwide expansion by evaluating uptake, usability, and effectiveness.'
-  ],
-  scopeIn: [
-    'Setup of 10 AI-powered Community Learning Hubs',
-    'Procurement and deployment of AI tutoring software',
-    'Curriculum development in three key areas:',
-    'Basic digital literacy (e.g. using MyInfo, Singpass, PayNow)',
-    'Cybersecurity & scam prevention',
-    'Job-readiness (e.g. e-commerce, remote work tools)',
-    'Public awareness and community engagement campaigns',
-    'Data collection and analysis for program refinement',
-  ],
-  scopeOut: [
-    'Development of new AI models (off-the-shelf solutions preferred for the pilot)',
-    'Deep-skilling programs (e.g., software development, cloud engineering)',
-  ],
-  timeline: [
-    { month: 'May 2025', activities: 'Project kick-off, partner onboarding, site selection' },
-    { month: 'Jun 2025', activities: 'Procurement of hardware/software; curriculum design; UX testing begins' },
-    { month: 'Jul 2025', activities: 'Installation of AI stations; dry runs with community groups' },
-    { month: 'Aug 2025', activities: 'Official launch of pilot at all 10 locations' },
-    { month: 'Sep 2025', activities: 'Mid-pilot user feedback round; media/PR push' },
-    { month: 'Oct 2025', activities: 'Content updates; AI performance tuning; data analysis begins' },
-    { month: 'Nov 2025', activities: 'Final round of engagement events; initial impact analysis' },
-    { month: 'Dec 2025', activities: 'Final evaluation report submitted; proposal for Phase 2 rollout' },
-  ],
-  stakeholders: [
-    { name: 'IMDA Planning Division', role: 'Project ownership, strategic oversight' },
-    { name: 'National Library Board (NLB)', role: 'Host locations and outreach' },
-    { name: 'PA Community Centres', role: 'Additional pilot locations' },
-    { name: 'Local AI Vendors / EdTech Startups', role: 'Software and platform providers' },
-    { name: 'SkillsFuture Singapore', role: 'Alignment of content and credentialing' },
-    { name: 'Silver Infocomm Junction (SIJ)', role: 'Outreach to senior citizens' },
-  ],
-  budget: [
-    { item: 'Hardware (touchscreens, cameras, etc.)', cost: 200000 },
-    { item: 'AI Tutoring Software Licenses', cost: 150000 },
-    { item: 'Content Development & Translation', cost: 100000 },
-    { item: 'Publicity & Engagement', cost: 50000 },
-    { item: 'Research & Evaluation', cost: 50000 },
-    { item: 'Contingency (10%)', cost: 55000 },
-    { item: 'Total', cost: 605000 },
-  ],
-  risks: [
-    { risk: 'Low community adoption', mitigation: 'Partner with grassroots and run incentives' },
-    { risk: 'AI tool inaccuracy or language gaps', mitigation: 'Pre-test with diverse user base; human facilitator support' },
-    { risk: 'Tech maintenance issues', mitigation: 'Vendor SLAs; onsite technical support' },
-    { risk: 'Privacy and data protection concerns', mitigation: 'Compliance with PDPA; anonymised data collection' },
-  ],
-  metrics: [
-    'At least 1,500 unique users across all hubs during the pilot',
-    'Minimum of 80% satisfaction score in user feedback',
-    'At least 500 users complete a micro-certification path',
-    'Improvement in digital confidence for >70% of senior users surveyed',
-    'Viability assessment for nationwide rollout completed by Dec 2025',
-  ],
-};
-
 const ProjectPlan = () => {
-  const [mode, setMode] = useState<'none' | 'upload' | 'create'>('none');
-  const [form, setForm] = useState(initialForm);
+  const [mode, setMode] = useState('none'); // 'none', 'upload', 'create'
   const [fileName, setFileName] = useState('');
   const [loading, setLoading] = useState(true);
   const [saveMsg, setSaveMsg] = useState('');
+  const [form, setForm] = useState({
+    title: '',
+    duration: '',
+    owner: '',
+    manager: '',
+    summary: '',
+    objectives: [''],
+    scopeIn: [''],
+    scopeOut: [''],
+    timeline: [{ month: '', activities: '' }],
+    stakeholders: [{ name: '', role: '' }],
+    budget: [{ item: '', cost: 0 }],
+    risks: [{ risk: '', mitigation: '' }],
+    metrics: [''],
+  });
 
   useEffect(() => {
-    // Load from db on mount
-    db.projectPlan.get(1).then((record) => {
-      if (record && record.data) setForm(record.data);
-      setLoading(false);
-    });
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const record = await db.projectPlan.get(1);
+      if (record && record.data) {
+        setForm(record.data);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleFormChange = (field, value) => {
     setForm({ ...form, [field]: value });
   };
 
-  // Dynamic array handlers
-  const addToArray = (field, emptyVal) => {
-    setForm({ ...form, [field]: [...form[field], emptyVal] });
+  const addToArray = (field, defaultValue) => {
+    setForm({ ...form, [field]: [...form[field], defaultValue] });
   };
+
   const removeFromArray = (field, idx) => {
     setForm({ ...form, [field]: form[field].filter((_: any, i: number) => i !== idx) });
   };
 
-  // Save to db
   const handleSave = async (e) => {
     e.preventDefault();
-    await db.projectPlan.put({ id: 1, data: form });
-    setSaveMsg('Saved!');
-    setTimeout(() => setSaveMsg(''), 2000);
+    try {
+      await db.projectPlan.put({ id: 1, data: form });
+      setSaveMsg('Saved successfully!');
+      setTimeout(() => setSaveMsg(''), 3000);
+    } catch (error) {
+      console.error('Error saving data:', error);
+      setSaveMsg('Error saving data');
+    }
   };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
       <div className="fixed inset-y-0 left-0 w-64 z-30">
         <Sidebar />
       </div>
-      {/* Main Content with fixed header */}
       <div className="ml-64 flex flex-col h-screen">
         <div className="sticky top-0 z-20 bg-gray-50">
           <Header title="Project Plan" />
